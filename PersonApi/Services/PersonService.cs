@@ -12,7 +12,7 @@ namespace PersonApi.Services
             _personRepository = personRepository;
         }
 
-        public Person CreatePerson(string name, DateOnly birthDate)
+        public Person CreatePerson(string name, DateOnly? birthDate = null)
         {
             var newPerson = new Person(name, birthDate);
 

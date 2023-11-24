@@ -4,12 +4,12 @@ namespace PersonApi.Models
     {
         public int Id { get; set; }
         public string? Name { get; private set; }
-        public DateOnly BirthDate { get; private set; }
+        public DateOnly? BirthDate { get; private set; }
 
-        public Person(string? name, DateOnly birthDate)
+        public Person(string name, DateOnly? birthDate = null)
         {
             Name = name;
-            BirthDate = birthDate;
+            BirthDate = birthDate.GetValueOrDefault();
         }
     }
 }
