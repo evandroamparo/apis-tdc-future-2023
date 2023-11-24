@@ -4,6 +4,7 @@ using PersonApi.Services;
 
 namespace PersonApi.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase
@@ -15,6 +16,7 @@ namespace PersonApi.Controllers
             _personService = personService;
         }
 
+        [MapToApiVersion("1.0")]
         [HttpGet("{id}")]
         public ActionResult<Person> Get(int id)
         {
@@ -28,6 +30,7 @@ namespace PersonApi.Controllers
             return Ok(person);
         }
 
+        [MapToApiVersion("1.0")]
         [HttpPost]
         public ActionResult<Person> Post([FromBody] PersonCreateModel model)
         {

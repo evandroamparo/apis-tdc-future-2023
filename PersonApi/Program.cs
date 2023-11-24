@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using PersonApi.Data;
 using PersonApi.Models;
 using PersonApi.Repository;
@@ -12,9 +16,39 @@ ConfigureServices(builder.Services);
 
 
 builder.Services.AddControllers();
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
+
+builder.Services.AddVersionedApiExplorer(setup =>
+    {
+        setup.GroupNameFormat = "'v'VVV";
+        setup.SubstituteApiVersionInUrl = true;
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "1.0",
+        Title = "Person API",
+        Description = "A simple example ASP.NET Core Web API",
+    });
+
+    options.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "2.0",
+        Title = "Person API",
+        Description = "A simple example ASP.NET Core Web API",
+    });
+});
 
 var app = builder.Build();
 InitializeDatabase(app);
@@ -23,7 +57,19 @@ InitializeDatabase(app);
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(
+        options =>
+            {
+                var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant()
+                    );
+                }
+            }
+            );
 }
 
 app.UseHttpsRedirection();
@@ -31,6 +77,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseApiVersioning();
 
 app.Run();
 
