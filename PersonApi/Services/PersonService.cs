@@ -12,6 +12,15 @@ namespace PersonApi.Services
             _personRepository = personRepository;
         }
 
+        public Person CreatePerson(string name)
+        {
+            var newPerson = new Person(name);
+
+            _personRepository.AddPerson(newPerson);
+
+            return newPerson;
+        }
+
         public Person GetPersonById(int personId)
         {
             return _personRepository.GetPersonById(personId);

@@ -27,5 +27,19 @@ namespace PersonApi.Controllers
 
             return Ok(person);
         }
+
+        [HttpPost]
+        public ActionResult<Person> Post([FromBody] string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Invalid input");
+            }
+
+            var newPerson = _personService.CreatePerson(name);
+
+            return CreatedAtAction(nameof(Get), new { id = newPerson.Id }, newPerson);
+        }
+
     }
 }

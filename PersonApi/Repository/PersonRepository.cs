@@ -12,6 +12,12 @@ namespace PersonApi.Repository
             _dbContext = dbContext;
         }
 
+        public void AddPerson(Person person)
+        {
+            _dbContext.Persons.Add(person);
+            _dbContext.SaveChanges();
+        }
+
         public Person GetPersonById(int personId)
         {
             return _dbContext.Persons.FirstOrDefault(p => p.Id == personId);
