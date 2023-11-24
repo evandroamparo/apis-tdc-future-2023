@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PersonApi.Data;
@@ -17,19 +16,20 @@ ConfigureServices(builder.Services);
 
 builder.Services.AddControllers();
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
-
-builder.Services.AddVersionedApiExplorer(setup =>
+builder.Services
+    .AddApiVersioning(options =>
     {
-        setup.GroupNameFormat = "'v'VVV";
-        setup.SubstituteApiVersionInUrl = true;
-    });
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = ApiVersion.Default;
+        options.AssumeDefaultVersionWhenUnspecified = true;
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    })
+    .AddMvc();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v2", new OpenApiInfo
     {
         Version = "2.0",
-        Title = "Person API",
+        Title = "Person API v2",
         Description = "A simple example ASP.NET Core Web API",
     });
 });
@@ -77,8 +77,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseApiVersioning();
 
 app.Run();
 
