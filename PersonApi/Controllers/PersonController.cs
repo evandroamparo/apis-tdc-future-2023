@@ -36,7 +36,7 @@ namespace PersonApi.Controllers
                 return BadRequest("Invalid input");
             }
 
-            var newPerson = _personService.CreatePerson(model.Name, DateOnly.FromDateTime(model.BirthDate));
+            var newPerson = _personService.CreatePerson(model.Name, DateOnly.FromDateTime(model.BirthDate), model.TaxId);
 
             return CreatedAtAction(nameof(Get), new { id = newPerson.Id }, newPerson);
         }
