@@ -73,7 +73,9 @@ static void InitializePersonDatabase(PersonDbContext dbContext)
 
         foreach (var name in names)
         {
-            dbContext.Persons.Add(new Person(name));
+            dbContext.Persons.Add(new Person(
+                name,
+                birthDate: DateOnly.FromDateTime(DateTime.Now.AddYears(-random.Next(20, 40)))));
         }
 
         dbContext.SaveChanges();

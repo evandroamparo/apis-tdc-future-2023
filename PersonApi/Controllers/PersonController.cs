@@ -29,14 +29,14 @@ namespace PersonApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Person> Post([FromBody] string name)
+        public ActionResult<Person> Post(string name, DateOnly birtDate)
         {
             if (string.IsNullOrEmpty(name))
             {
                 return BadRequest("Invalid input");
             }
 
-            var newPerson = _personService.CreatePerson(name);
+            var newPerson = _personService.CreatePerson(name, birtDate);
 
             return CreatedAtAction(nameof(Get), new { id = newPerson.Id }, newPerson);
         }
