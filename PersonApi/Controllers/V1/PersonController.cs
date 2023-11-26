@@ -33,14 +33,14 @@ namespace PersonApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpPost]
-        public ActionResult<Person> Post([FromBody] PersonCreateModel model)
+        public ActionResult<Person> Post([FromBody] PersonCreateRequest request)
         {
-            if (model == null)
+            if (request == null)
             {
                 return BadRequest("Invalid input");
             }
 
-            var newPerson = _personService.CreatePerson(model.Name, DateOnly.FromDateTime(model.BirthDate), model.TaxId);
+            var newPerson = _personService.CreatePerson(request.Name, DateOnly.FromDateTime(request.BirthDate), request.TaxId);
 
             return CreatedAtAction(nameof(Get), new { id = newPerson.Id }, newPerson);
         }
