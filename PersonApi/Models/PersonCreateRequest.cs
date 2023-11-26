@@ -1,6 +1,6 @@
 namespace PersonApi.Models
 {
-    public class PersonCreateModel
+    public class PersonCreateRequest
     {
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
